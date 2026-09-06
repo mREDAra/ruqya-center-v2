@@ -14,3 +14,4 @@ export { default as MiniCalendar } from "./MiniCalendar";
 export { default as TimeSlotPicker } from "./TimeSlotPicker";
 export { ToastProvider, useToast } from "./Toast";
 export { default as TipTapEditor } from "./TipTap";
+export { default as TopProgressBar } from "./TopProgressBar";

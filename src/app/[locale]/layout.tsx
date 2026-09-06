@@ -78,6 +78,8 @@ export const viewport: Viewport = {
 import JsonLd from "@/components/JsonLd";
 import { getOrganizationSchema } from "@/lib/jsonld";
 
+import TopProgressBar from "@/components/ui/TopProgressBar";
+
 export default async function RootLayout({
   children,
   params
@@ -99,6 +101,7 @@ export default async function RootLayout({
       <body className="min-h-screen flex flex-col overflow-x-hidden bg-bg">
         <JsonLd data={orgSchema} />
         <NextIntlClientProvider messages={messages}>
+          <TopProgressBar />
           <AuthRedirectHandler />
           {children}
         </NextIntlClientProvider>
