@@ -36,92 +36,95 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
+export const revalidate = 300;
+
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Home" });
-
-  // 1. Dynamic Hero & Stats
-  const hero = await getCmsContent("home", "hero", locale, {
-    badge: t("badge"),
-    title1: t("heroTitle1"),
-    title2: t("heroTitle2"),
-    title3: t("heroTitle3"),
-    description: t("heroDesc"),
-    ctaBook: t("ctaBook"),
-    ctaAbout: t("ctaAbout"),
-    stat1Val: "+1000",
-    stat1Label: t("statCases"),
-    stat2Val: "+25",
-    stat2Label: t("statYears"),
-    stat3Val: "+20",
-    stat3Label: t("statCountries"),
-  });
-
-  // 2. Dynamic About Preview with 3 customizable cards
-  const aboutPreview = await getCmsContent("home", "about_preview", locale, {
-    title: t("aboutTitle"),
-    description: t("aboutDesc"),
-    feat1Title: t("feature1Title"),
-    feat1Desc: t("feature1Desc"),
-    feat2Title: t("feature2Title"),
-    feat2Desc: t("feature2Desc"),
-    feat3Title: t("feature3Title"),
-    feat3Desc: t("feature3Desc"),
-  });
-
-  // 3. Dynamic Services Preview with 4 customizable cards & individual button labels
-  const servicesPreview = await getCmsContent("home", "services_preview", locale, {
-    title: t("servicesTitle"),
-    description: t("servicesDesc"),
-    svc1Title: t("svc1Title"),
-    svc1Desc: t("svc1Desc"),
-    svc1Btn: t("bookNow"),
-    svc2Title: t("svc2Title"),
-    svc2Desc: t("svc2Desc"),
-    svc2Btn: t("bookNow"),
-    svc3Title: t("svc3Title"),
-    svc3Desc: t("svc3Desc"),
-    svc3Btn: t("bookNow"),
-    svc4Title: t("svc4Title"),
-    svc4Desc: t("svc4Desc"),
-    svc4Btn: t("bookNow"),
-  });
-
-  // 4. Dynamic Treatments
-  const treatments = await getCmsContent("home", "treatments", locale, {
-    title: t("treatTitle"),
-    description: t("treatDesc"),
-    treat1Title: t("treat1Title"),
-    treat1Item1: "",
-    treat1Item2: "",
-    treat1Item3: "",
-    treat2Title: t("treat2Title"),
-    treat2Item1: "",
-    treat2Item2: "",
-    treat2Item3: "",
-    treat3Title: t("treat3Title"),
-    treat3Item1: "",
-    treat3Item2: "",
-    treat3Item3: "",
-    treat4Title: t("treat4Title"),
-    treat4Item1: "",
-    treat4Item2: "",
-    treat4Item3: "",
-  });
-
-  // 5. Dynamic CTA
-  const cta = await getCmsContent("home", "cta", locale, {
-    title: t("ctaTitle"),
-    description: t("ctaDesc"),
-    buttonText: t("ctaBook"),
-  });
-
   const supabase = await createClient();
-  const { data: dbFaqs } = await supabase
-    .from("faqs")
-    .select("id, question, answer, display_order")
-    .order("display_order", { ascending: true })
-    .limit(6);
+
+  // Fetch all CMS sections and FAQs concurrently
+  const [hero, aboutPreview, servicesPreview, treatments, cta, faqsRes] = await Promise.all([
+    // 1. Dynamic Hero & Stats
+    getCmsContent("home", "hero", locale, {
+      badge: t("badge"),
+      title1: t("heroTitle1"),
+      title2: t("heroTitle2"),
+      title3: t("heroTitle3"),
+      description: t("heroDesc"),
+      ctaBook: t("ctaBook"),
+      ctaAbout: t("ctaAbout"),
+      stat1Val: "+1000",
+      stat1Label: t("statCases"),
+      stat2Val: "+25",
+      stat2Label: t("statYears"),
+      stat3Val: "+20",
+      stat3Label: t("statCountries"),
+    }),
+    // 2. Dynamic About Preview with 3 customizable cards
+    getCmsContent("home", "about_preview", locale, {
+      title: t("aboutTitle"),
+      description: t("aboutDesc"),
+      feat1Title: t("feature1Title"),
+      feat1Desc: t("feature1Desc"),
+      feat2Title: t("feature2Title"),
+      feat2Desc: t("feature2Desc"),
+      feat3Title: t("feature3Title"),
+      feat3Desc: t("feature3Desc"),
+    }),
+    // 3. Dynamic Services Preview with 4 customizable cards & individual button labels
+    getCmsContent("home", "services_preview", locale, {
+      title: t("servicesTitle"),
+      description: t("servicesDesc"),
+      svc1Title: t("svc1Title"),
+      svc1Desc: t("svc1Desc"),
+      svc1Btn: t("bookNow"),
+      svc2Title: t("svc2Title"),
+      svc2Desc: t("svc2Desc"),
+      svc2Btn: t("bookNow"),
+      svc3Title: t("svc3Title"),
+      svc3Desc: t("svc3Desc"),
+      svc3Btn: t("bookNow"),
+      svc4Title: t("svc4Title"),
+      svc4Desc: t("svc4Desc"),
+      svc4Btn: t("bookNow"),
+    }),
+    // 4. Dynamic Treatments
+    getCmsContent("home", "treatments", locale, {
+      title: t("treatTitle"),
+      description: t("treatDesc"),
+      treat1Title: t("treat1Title"),
+      treat1Item1: "",
+      treat1Item2: "",
+      treat1Item3: "",
+      treat2Title: t("treat2Title"),
+      treat2Item1: "",
+      treat2Item2: "",
+      treat2Item3: "",
+      treat3Title: t("treat3Title"),
+      treat3Item1: "",
+      treat3Item2: "",
+      treat3Item3: "",
+      treat4Title: t("treat4Title"),
+      treat4Item1: "",
+      treat4Item2: "",
+      treat4Item3: "",
+    }),
+    // 5. Dynamic CTA
+    getCmsContent("home", "cta", locale, {
+      title: t("ctaTitle"),
+      description: t("ctaDesc"),
+      buttonText: t("ctaBook"),
+    }),
+    // 6. FAQs
+    supabase
+      .from("faqs")
+      .select("id, question, answer, display_order")
+      .order("display_order", { ascending: true })
+      .limit(6),
+  ]);
+
+  const dbFaqs = faqsRes.data;
 
   const aboutFeatures = [
     { icon: <Shield size={24} />, title: aboutPreview.feat1Title || t("feature1Title"), desc: aboutPreview.feat1Desc || t("feature1Desc") },
