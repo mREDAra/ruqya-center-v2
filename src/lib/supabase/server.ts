@@ -2,13 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-let publicClientInstance: ReturnType<typeof createSupabaseClient> | null = null;
+let publicClientInstance: any = null;
 
 /**
  * Public, cookie-free client for read-only public queries.
  * Does not call cookies(), allowing Next.js to cache pages statically (ISR).
  */
-export function createPublicClient() {
+export function createPublicClient(): any {
   if (!publicClientInstance) {
     publicClientInstance = createSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

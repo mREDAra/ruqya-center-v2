@@ -124,7 +124,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       .limit(6),
   ]);
 
-  const dbFaqs = faqsRes.data;
+  const dbFaqs = faqsRes.data as unknown as Array<{ id: string; question: string; answer: string; display_order: number }> | null;
 
   const aboutFeatures = [
     { icon: <Shield size={24} />, title: aboutPreview.feat1Title || t("feature1Title"), desc: aboutPreview.feat1Desc || t("feature1Desc") },

@@ -27,9 +27,11 @@ export default async function PublicLayout({
   ]);
 
   const initialSettings: Record<string, string> = {};
-  if (settingsRes.data) {
-    settingsRes.data.forEach((s) => {
-      initialSettings[s.key] = s.value;
+  if (settingsRes?.data) {
+    (settingsRes.data as unknown as Array<{ key: string; value: string }>).forEach((s) => {
+      if (s?.key) {
+        initialSettings[s.key] = s.value || "";
+      }
     });
   }
 
