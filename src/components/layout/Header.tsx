@@ -67,7 +67,7 @@ export default function Header({
               alt={titleText}
               width={84}
               height={84}
-              className="w-[72px] h-[72px] md:w-[84px] md:h-[84px] rounded-full shadow-md"
+              className="w-[72px] h-[72px] md:w-[84px] md:h-[84px] rounded-full shadow-md object-cover"
               priority
             />
             <div className="hidden sm:block">
@@ -110,7 +110,7 @@ export default function Header({
               onClick={toggleLanguage}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-border bg-gray-50/80 hover:bg-gray-100 text-xs font-bold text-text-primary transition-all shadow-xs hover:border-primary/30"
               title={locale === "ar" ? "Türkçe diline geç" : "التحويل للغة العربية"}
-              aria-label="Change language"
+              aria-label={locale === "ar" ? "Türkçe diline geç" : "العربية - التبديل إلى العربية"}
             >
               <Globe size={14} className="text-primary" />
               <span>{locale === "ar" ? "Türkçe" : "العربية"}</span>

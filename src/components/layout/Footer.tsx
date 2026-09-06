@@ -10,13 +10,15 @@ import { useTranslations, useLocale } from "next-intl";
 
 export default function Footer({
   globalContent,
+  initialSettings = {},
 }: {
   globalContent?: Record<string, any>;
+  initialSettings?: Record<string, string>;
 }) {
   const t = useTranslations("Footer");
   const locale = useLocale();
   const nav = useTranslations("Navigation");
-  const [settings, setSettings] = useState<Record<string, string>>({});
+  const [settings, setSettings] = useState<Record<string, string>>(initialSettings);
 
   useEffect(() => {
     async function loadSettings() {
@@ -61,7 +63,7 @@ export default function Footer({
           {/* About */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <Image src="/logo.png" alt="Logo" width={56} height={56} className="w-14 h-14 rounded-full" />
+              <Image src="/logo.png" alt={siteName} width={56} height={56} className="w-14 h-14 rounded-full object-cover" />
               <h3 className="font-bold text-lg">{siteName}</h3>
             </div>
             <p className="text-sm text-gray-300 leading-relaxed">{aboutText}</p>

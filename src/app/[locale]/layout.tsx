@@ -8,10 +8,11 @@ import {notFound} from 'next/navigation';
 import AuthRedirectHandler from '@/components/AuthRedirectHandler';
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   subsets: ["arabic", "latin"],
   variable: "--font-ibm-plex-arabic",
   display: "swap",
+  preload: true,
 });
 
 import { getBaseUrl, getPageAlternates } from "@/lib/site-url";
@@ -72,8 +73,6 @@ export async function generateMetadata({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 import JsonLd from "@/components/JsonLd";

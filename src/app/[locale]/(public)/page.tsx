@@ -220,23 +220,23 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-sm mb-8 animate-[fade-in_0.6s_ease-out]">
-              <Sparkles size={14} className="text-accent" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-sm mb-8">
+              <Sparkles size={14} className="text-accent-light" />
               <span>{hero.badge}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6 animate-[slide-up_0.6s_ease-out]">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6">
               {hero.title1}{" "}
               <span className="text-gradient">{hero.title2}</span>
               <br />
               {hero.title3}
             </h1>
 
-            <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-10 max-w-2xl mx-auto animate-[slide-up_0.6s_ease-out_0.15s_both]">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-10 max-w-2xl mx-auto">
               {hero.description}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-[slide-up_0.6s_ease-out_0.3s_both]">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/booking"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-accent text-white font-semibold text-lg hover:bg-accent-light transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
@@ -254,17 +254,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-3 md:gap-6 mt-16 max-w-lg mx-auto animate-[fade-in_0.6s_ease-out_0.5s_both]">
+            <div className="grid grid-cols-3 gap-3 md:gap-6 mt-16 max-w-lg mx-auto">
               <div className="text-center">
-                <p className="text-2xl lg:text-3xl font-bold text-accent">{hero.stat1Val || "+1000"}</p>
+                <p className="text-2xl lg:text-3xl font-bold text-accent-light">{hero.stat1Val || "+1000"}</p>
                 <p className="text-xs text-gray-300 mt-1">{hero.stat1Label || t("statCases")}</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl lg:text-3xl font-bold text-accent">{hero.stat2Val || "+25"}</p>
+                <p className="text-2xl lg:text-3xl font-bold text-accent-light">{hero.stat2Val || "+25"}</p>
                 <p className="text-xs text-gray-300 mt-1">{hero.stat2Label || t("statYears")}</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl lg:text-3xl font-bold text-accent">{hero.stat3Val || "+20"}</p>
+                <p className="text-2xl lg:text-3xl font-bold text-accent-light">{hero.stat3Val || "+20"}</p>
                 <p className="text-xs text-gray-300 mt-1">{hero.stat3Label || t("statCountries")}</p>
               </div>
             </div>
