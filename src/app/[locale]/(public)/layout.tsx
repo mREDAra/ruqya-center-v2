@@ -3,7 +3,7 @@ import Footer from "@/components/layout/Footer";
 import { ToastProvider } from "@/components/ui/Toast";
 import { getCmsContent } from "@/lib/cms";
 import { getTranslations } from "next-intl/server";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/server";
 
 export default async function PublicLayout({
   children,
@@ -15,7 +15,7 @@ export default async function PublicLayout({
   const { locale } = await params;
   const tFooter = await getTranslations({ locale, namespace: "Footer" });
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const [globalContent, settingsRes] = await Promise.all([
     getCmsContent("global", "footer", locale, {
       siteNameShort: locale === "tr" ? "Ruqya Şifa Merkezi" : "مركز الرقية بكلام الرحمن",

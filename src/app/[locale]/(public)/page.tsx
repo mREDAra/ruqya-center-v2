@@ -13,7 +13,7 @@ import {
   Globe,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/server";
 import PaymentReturnDetector from "@/components/PaymentReturnDetector";
 import { getCmsContent, getCmsPageSeo } from "@/lib/cms";
 import { getPageAlternates } from "@/lib/site-url";
@@ -41,7 +41,7 @@ export const revalidate = 300;
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Home" });
-  const supabase = await createClient();
+  const supabase = createPublicClient();
 
   // Fetch all CMS sections and FAQs concurrently
   const [hero, aboutPreview, servicesPreview, treatments, cta, faqsRes] = await Promise.all([

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/server";
 
 export interface HomeHeroContent {
   badge?: string;
@@ -73,7 +73,7 @@ export async function getCmsContent<T extends object>(
   fallback: T
 ): Promise<T> {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const loc = locale === "tr" ? "tr" : "ar";
 
     // 1. Try fetching from dedicated site_content table
@@ -124,7 +124,7 @@ export async function getCmsPageSeo(
   const loc = locale === "tr" ? "tr" : "ar";
 
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
 
     // 1. Try pages_seo table
     const { data: seoData, error: seoError } = await supabase
