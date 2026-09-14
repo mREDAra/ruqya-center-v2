@@ -99,15 +99,13 @@ export async function POST(req: Request) {
 
     // Update booking in Supabase (Race-condition safe)
     const paymentStatus = isSuccess ? "paid" : "failed";
-    const bookingStatus = isSuccess ? "confirmed" : "pending";
 
-    console.log("🔔 Updating booking:", finalBookingId, "payment_status:", paymentStatus, "status:", bookingStatus);
+    console.log("🔔 Updating booking:", finalBookingId, "payment_status:", paymentStatus);
 
     let query = supabase
       .from("bookings")
       .update({
         payment_status: paymentStatus,
-        status: bookingStatus
       })
       .eq("id", finalBookingId);
       
@@ -140,30 +138,7 @@ export async function POST(req: Request) {
 
     console.log("🔔 Booking updated successfully.");
 
-    // Send email if payment is successful
-    if (isSuccess) {
-      try {
-        const { sendBookingEmailAction } = await import("@/app/actions/bookingEmail");
-        const healerName = booking.available_slots?.healers?.display_name || "مُعالج";
-        const slotDate = booking.available_slots?.slot_date || String(new Date().toISOString()).split('T')[0];
-        const startTime = booking.available_slots?.start_time || "00:00";
-        const endTime = booking.available_slots?.end_time || "00:00";
-        const serviceName = booking.services?.name || "خدمة مدفوعة";
-
-        await sendBookingEmailAction({
-          patient_name: booking.patient_name,
-          patient_email: booking.patient_email,
-          patient_phone: booking.patient_phone,
-          service_name: serviceName,
-          date: slotDate,
-          time: `${startTime} - ${endTime}`,
-          healer_name: healerName
-        });
-        console.log("🔔 Booking email sent successfully for:", finalBookingId);
-      } catch (emailError) {
-        console.error("Webhook email error:", emailError);
-      }
-    }
+    // Emails are now sent by the admin when they confirm the booking.
 
     return NextResponse.json({ success: true, status: paymentStatus, booking_id: finalBookingId });
   } catch (error: any) {

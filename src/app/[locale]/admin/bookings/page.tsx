@@ -99,11 +99,23 @@ export default function AdminBookingsPage() {
   };
 
   const assignHealer = async (bookingId: string, healerId: string) => {
-    await supabase.from("bookings").update({ healer_id: healerId || null }).eq("id", bookingId);
-    
-    if (healerId) {
-      notifyHealerAssignedAndPatientConfirmed(bookingId).catch(console.error);
+    if (!healerId) {
+      await supabase.from("bookings").update({ healer_id: null }).eq("id", bookingId);
+      loadBookings();
+      if (selectedBooking?.id === bookingId) {
+        setSelectedBooking({
+          ...selectedBooking,
+          healer_id: "",
+          healers: null,
+        });
+      }
+      return;
     }
+
+    // Assigning a healer confirms the booking automatically
+    await supabase.from("bookings").update({ healer_id: healerId, status: "confirmed" }).eq("id", bookingId);
+    
+    notifyHealerAssignedAndPatientConfirmed(bookingId).catch(console.error);
     
     loadBookings();
     const healer = healers.find((h) => h.id === healerId);
@@ -111,6 +123,7 @@ export default function AdminBookingsPage() {
       setSelectedBooking({
         ...selectedBooking,
         healer_id: healerId,
+        status: "confirmed",
         healers: healer ? { display_name: healer.display_name } : null,
       });
     }

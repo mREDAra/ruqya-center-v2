@@ -264,14 +264,22 @@ export default function BookingPage() {
         (s) => s.current_bookings < s.max_capacity
       ) || [];
 
-      const slots: TimeSlot[] = available.map((s) => ({
-        id: s.id,
-        start_time: s.start_time,
-        end_time: s.end_time,
-        healer_name: s.healers?.display_name || "",
-      }));
+      const uniqueSlots: TimeSlot[] = [];
+      const seenTimes = new Set();
+      
+      for (const s of available) {
+        if (!seenTimes.has(s.start_time)) {
+          seenTimes.add(s.start_time);
+          uniqueSlots.push({
+            id: s.id,
+            start_time: s.start_time,
+            end_time: s.end_time,
+            healer_name: "", // Don't show healer name to customer
+          });
+        }
+      }
 
-      setDaySlots(slots);
+      setDaySlots(uniqueSlots);
       setSlotsLoading(false);
     },
     [supabase]
@@ -320,7 +328,7 @@ export default function BookingPage() {
       const res = await createBookingAction({
         slot_id: selectedSlotId,
         service_id: form.service_id,
-        healer_id: slotData.healer_id || null,
+        healer_id: null,
         patient_name: form.patient_name,
         patient_email: form.patient_email || null,
         patient_phone: fullPhone,
@@ -410,11 +418,7 @@ export default function BookingPage() {
               <div className="flex flex-col gap-2 items-center text-text-secondary">
                 <p>{formatDate(selectedSlotData.date)}</p>
                 <p>{formatTime(selectedSlotData.start_time)} — {formatTime(selectedSlotData.end_time)}</p>
-                {selectedSlotData.healer_name && (
-                  <p className="mt-1 font-medium text-text-primary">
-                    {selectedSlotData.healer_name}
-                  </p>
-                )}
+                {/* Healer name removed so customer does not see it */}
               </div>
             </div>
           )}
@@ -733,12 +737,7 @@ export default function BookingPage() {
                         <span className="text-sm text-text-secondary">{t("confirmStep.details.time")}</span>
                         <span className="text-sm font-medium text-text-primary" dir="ltr">{formatTime(selectedSlotData.start_time)} — {formatTime(selectedSlotData.end_time)}</span>
                       </div>
-                      {selectedSlotData.healer_name && (
-                        <div className="flex justify-between py-2 border-b border-border">
-                          <span className="text-sm text-text-secondary">{t("confirmStep.details.healer")}</span>
-                          <span className="text-sm font-medium text-text-primary">{selectedSlotData.healer_name}</span>
-                        </div>
-                      )}
+                      {/* Healer name removed so customer does not see it */}
                     </>
                   )}
 
